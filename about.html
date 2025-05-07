@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>About - Notes App</title>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <style>
+            :root[data-theme="light"] {
+                --bg-color: #ffffff;
+                --text-color: #333333;
+                --primary-color: #2d1a8b;
+                --secondary-color: #363055;
+                --card-bg: rgba(255, 255, 255, 0.95);
+                --card-border: rgba(255, 255, 255, 0.3);
+                --input-bg: rgba(255, 255, 255, 0.9);
+                --hover-bg: rgba(45, 26, 139, 0.1);
+                --shadow-color: rgba(0, 0, 0, 0.1);
+            }
+
+            :root[data-theme="dark"] {
+                --bg-color: #1a1a1a;
+                --text-color: #ffffff;
+                --primary-color: #4a3a9b;
+                --secondary-color: #5a4aab;
+                --card-bg: rgba(30, 30, 30, 0.95);
+                --card-border: rgba(255, 255, 255, 0.1);
+                --input-bg: rgba(40, 40, 40, 0.9);
+                --hover-bg: rgba(255, 255, 255, 0.1);
+                --shadow-color: rgba(0, 0, 0, 0.3);
+            }
+
+            body {
+                background-color: var(--bg-color);
+                color: var(--text-color);
+                min-height: 100vh;
+                margin: 0;
+                font-family: Arial, sans-serif;
+                background-image: url('images/webBg.jpg');
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+                transition: background-color 0.3s ease, color 0.3s ease;
+            }
+
+            header {
+                background: rgba(45, 26, 139, 0.9);
+                padding: 1rem 2rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                backdrop-filter: blur(10px);
+            }
+
+            .nav-container {
+                display: flex;
+                align-items: center;
+                gap: 2rem;
+                position: relative;
+                width: 100%;
+            }
+
+            .main-nav {
+                display: flex;
+                gap: 1.5rem;
+                align-items: center;
+            }
+
+            .nav-link {
+                color: white;
+                text-decoration: none;
+                padding: 0.5rem 1rem;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 1rem;
+            }
+
+            .nav-link:hover {
+                background: rgba(255, 255, 255, 0.1);
+                transform: translateY(-2px);
+            }
+
+            .nav-link.active {
+                background: rgba(255, 255, 255, 0.2);
+                font-weight: 500;
+            }
+
+            .nav-link i {
+                font-size: 1.1rem;
+            }
+
+            header h1 {
+                color: white;
+                margin: 0;
+                font-size: 1.8rem;
+            }
+
+            .about-container {
+                max-width: 1200px;
+                margin: 2rem auto;
+                padding: 2rem;
+            }
+
+            .about-section {
+                background: var(--card-bg);
+                padding: 2rem;
+                border-radius: 16px;
+                margin-bottom: 2rem;
+                box-shadow: 0 8px 32px var(--shadow-color);
+                backdrop-filter: blur(10px);
+                border: 1px solid var(--card-border);
+            }
+
+            .about-section h2 {
+                color: var(--primary-color);
+                margin-bottom: 1.5rem;
+                font-size: 2rem;
+            }
+
+            .about-section p {
+                color: var(--text-color);
+                line-height: 1.6;
+                margin-bottom: 1rem;
+            }
+
+            /* Feature Cards */
+            .features-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 2rem;
+                margin-top: 2rem;
+            }
+
+            .feature-card {
+                background: var(--card-bg);
+                padding: 1.5rem;
+                border-radius: 12px;
+                text-align: center;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 12px var(--shadow-color);
+                border: 1px solid var(--card-border);
+            }
+
+            .feature-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 24px var(--shadow-color);
+            }
+
+            .feature-card i {
+                font-size: 2.5rem;
+                color: var(--primary-color);
+                margin-bottom: 1rem;
+            }
+
+            .feature-card h3 {
+                color: var(--primary-color);
+                margin-bottom: 0.5rem;
+                font-size: 1.2rem;
+            }
+
+            .feature-card p {
+                color: var(--text-color);
+                font-size: 0.9rem;
+                margin: 0;
+            }
+
+            /* Developer Section */
+            .developer-section {
+                background: var(--card-bg);
+                padding: 2rem;
+                border-radius: 16px;
+                margin-top: 3rem;
+                box-shadow: 0 8px 32px var(--shadow-color);
+                backdrop-filter: blur(10px);
+                border: 1px solid var(--card-border);
+                display: flex;
+                align-items: center;
+                gap: 2rem;
+            }
+
+            .developer-image {
+                width: 200px;
+                height: 200px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 3px solid var(--primary-color);
+            }
+
+            .developer-info {
+                flex: 1;
+            }
+
+            .developer-info h2 {
+                color: var(--primary-color);
+                margin-bottom: 1rem;
+                font-size: 1.8rem;
+            }
+
+            .developer-info p {
+                color: var(--text-color);
+                line-height: 1.6;
+                margin-bottom: 1rem;
+            }
+
+            .developer-social {
+                display: flex;
+                gap: 1rem;
+                margin-top: 1rem;
+            }
+
+            .developer-social a {
+                color: var(--text-color);
+                font-size: 1.5rem;
+                transition: all 0.3s ease;
+            }
+
+            .developer-social a:hover {
+                color: var(--primary-color);
+                transform: translateY(-2px);
+            }
+
+            /* Settings Panel Styles */
+            .settings-btn {
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+                color: white;
+            }
+
+            .settings-btn:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            .settings-icon {
+                width: 24px;
+                height: 24px;
+                filter: invert(1);
+            }
+
+            .settings-panel {
+                position: fixed;
+                top: 0;
+                right: -300px;
+                width: 300px;
+                height: 100vh;
+                background: var(--card-bg);
+                backdrop-filter: blur(10px);
+                box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+                transition: right 0.3s ease;
+                z-index: 1000;
+                border-left: 1px solid var(--card-border);
+            }
+
+            .settings-panel.show {
+                right: 0;
+            }
+
+            .settings-header {
+                padding: 1.5rem;
+                border-bottom: 1px solid var(--card-border);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .settings-header h3 {
+                margin: 0;
+                color: var(--primary-color);
+                font-size: 1.2rem;
+            }
+
+            .close-btn {
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                color: var(--text-color);
+                cursor: pointer;
+                padding: 0.5rem;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+            }
+
+            .close-btn:hover {
+                background: var(--hover-bg);
+                color: var(--primary-color);
+            }
+
+            .settings-content {
+                padding: 1.5rem;
+            }
+
+            .setting-group {
+                margin-bottom: 2rem;
+            }
+
+            .setting-group h4 {
+                color: var(--primary-color);
+                margin-bottom: 1rem;
+                font-size: 1rem;
+            }
+
+            .font-size-controls {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .font-btn {
+                background: var(--primary-color);
+                color: white;
+                border: none;
+                padding: 0.5rem 1rem;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .font-btn:hover {
+                background: var(--secondary-color);
+                transform: translateY(-2px);
+            }
+
+            #fontSizeDisplay {
+                color: var(--text-color);
+                min-width: 80px;
+                text-align: center;
+            }
+
+            .theme-toggle {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 60px;
+                height: 34px;
+            }
+
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                transition: .4s;
+            }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                transition: .4s;
+            }
+
+            input:checked + .slider {
+                background-color: var(--primary-color);
+            }
+
+            input:checked + .slider:before {
+                transform: translateX(26px);
+            }
+
+            .slider.round {
+                border-radius: 34px;
+            }
+
+            .slider.round:before {
+                border-radius: 50%;
+            }
+
+            /* Font Settings Toggle Button */
+            .font-settings-toggle {
+                position: absolute;
+                right: 4rem;
+                top: 50%;
+                transform: translateY(-50%);
+                z-index: 101;
+            }
+
+            /* Header Actions */
+            .header-actions {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            /* Footer Styles */
+            footer {
+                background: var(--card-bg);
+                padding: 2rem;
+                margin-top: 3rem;
+                border-top: 1px solid var(--card-border);
+                backdrop-filter: blur(10px);
+            }
+
+            .footer-content {
+                max-width: 1200px;
+                margin: 0 auto;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 2rem;
+            }
+
+            .footer-left {
+                color: var(--text-color);
+            }
+
+            .footer-right {
+                display: flex;
+                gap: 1.5rem;
+            }
+
+            .social-link {
+                color: var(--text-color);
+                font-size: 1.5rem;
+                transition: all 0.3s ease;
+            }
+
+            .social-link:hover {
+                color: var(--primary-color);
+                transform: translateY(-2px);
+            }
+
+            /* Mobile menu styles */
+            .hamburger-menu {
+                display: none;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+                padding: 0.5rem;
+                transition: all 0.3s ease;
+                position: absolute;
+                left: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                z-index: 101;
+            }
+
+            .hamburger-menu:hover {
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+            .logout-btn {
+                color: white;
+                text-decoration: none;
+                padding: 0.5rem;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 0.0001px;
+                background: none;
+                border: none;
+            }
+
+            .logout-btn i {
+                font-size: 1.2rem;
+            }
+
+            .logout-btn span {
+                display: none;
+            }
+
+            @media (max-width: 768px) {
+                header {
+                    flex-direction: column;
+                    gap: 1rem;
+                    padding: 1rem;
+                }
+
+                .nav-container {
+                    flex-direction: column;
+                    gap: 1rem;
+                    width: 100%;
+                }
+
+                .main-nav {
+                    width: 100%;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                }
+
+                .nav-link {
+                    padding: 0.4rem 0.8rem;
+                    font-size: 0.9rem;
+                }
+
+                .about-container {
+                    padding: 1rem;
+                }
+
+                .footer-content {
+                    flex-direction: column;
+                    text-align: center;
+                }
+
+                .footer-right {
+                    justify-content: center;
+                }
+
+                .hamburger-menu {
+                    display: block;
+                }
+
+                .nav-container {
+                    position: relative;
+                    width: 100%;
+                    justify-content: center;
+                }
+
+                .main-nav {
+                    display: none;
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    right: 0;
+                    background: rgba(45, 26, 139, 0.95);
+                    padding: 1rem;
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 0.5rem;
+                    border-radius: 0 0 8px 8px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                    backdrop-filter: blur(10px);
+                }
+
+                .main-nav.show {
+                    display: flex;
+                }
+
+                .nav-link {
+                    width: 100%;
+                    justify-content: center;
+                    padding: 0.8rem;
+                }
+
+                .header-actions {
+                    position: absolute;
+                    right: 1rem;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+
+                .font-settings-toggle {
+                    margin-right: 0;
+                }
+
+                .settings-btn {
+                    padding: 0.4rem;
+                }
+
+                .settings-icon {
+                    width: 20px;
+                    height: 20px;
+                    margin-left:4rem;
+                }
+
+                header h1 {
+                    margin-left: 3rem;
+                    font-size: 1.5rem;
+                }
+
+                .developer-section {
+                    flex-direction: column;
+                    text-align: center;
+                }
+
+                .developer-image {
+                    width: 150px;
+                    height: 150px;
+                }
+
+                .developer-social {
+                    justify-content: center;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div class="nav-container">
+                <button class="hamburger-menu" id="hamburgerMenu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 style="margin-right: 8rem;">JustPost</h1>
+                <nav class="main-nav">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                    <a href="notes.html" class="nav-link">
+                        <i class="fas fa-sticky-note"></i> Notes
+                    </a>
+                    <a href="about.html" class="nav-link active">
+                        <i class="fas fa-info-circle"></i> About
+                    </a>
+                    <a href="contact.html" class="nav-link">
+                        <i class="fas fa-envelope"></i> Contact
+                    </a>
+                </nav>
+                <div class="header-actions">
+                    <div class="font-settings-toggle">
+                        <button id="fontSettingsBtn" class="settings-btn">
+                            <i class="fas fa-cog settings-icon"></i>
+                        </button>
+                    </div>
+                    <a href="login.html" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <main class="about-container">
+            <section class="about-section">
+                <h2>About JustPost</h2>
+                <p>JustPost is a modern note-taking application designed to help you capture and organize your thoughts, ideas, and memories in a simple and intuitive way.</p>
+                <p>The goal is to provide a seamless note-taking experience that combines powerful features with an elegant user interface. Whether you're a student, professional, or casual user, JustPost adapts to your needs.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-pen-fancy"></i>
+                        <h3>Easy Note Taking</h3>
+                        <p>Create and edit notes with an intuitive interface. Format text, add images, and organize your thoughts effortlessly.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-cloud"></i>
+                        <h3>Cloud Sync</h3>
+                        <p>Access your notes from anywhere. Your data is automatically synced across all your devices.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-lock"></i>
+                        <h3>Secure Storage</h3>
+                        <p>Your notes are encrypted and securely stored. Your privacy is our top priority.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-palette"></i>
+                        <h3>Customizable</h3>
+                        <p>Choose between dark and light themes, adjust font sizes, and personalize your experience.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Future Updates</h3>
+                        <p>Stay tuned for Future  updates...</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="developer-section">
+                <img src="images/me.jpg" alt="Developer" class="developer-image">
+                <div class="developer-info">
+                    <h2>Developed by Nata De Nata</h2>
+                    <p>JustPost was created with passion and dedication to provide a simple yet powerful note-taking solution. As a developer, I believe in creating applications that are not only functional but also enjoyable to use.</p>
+                    <p>This project represents my commitment to building user-friendly applications that make a difference in people's daily lives. I'm constantly working to improve JustPost and add new features based on user feedback.</p>
+                    <div class="developer-social">
+                        <a href="https://www.facebook.com/natsnattyu" target="_blank"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.instagram.com/natsdenata" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://github.com/NataDeNata" target="_blank"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-left">
+                    <p>&copy; 2024 JustPost. All rights reserved.</p>
+                </div>
+                <div class="footer-right">
+                    <a href="https://www.facebook.com/natsnattyu?rdid=Tb1atsjZg1z5q7Ba&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F16cFE3DiML%2F" class="social-link"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/natsdenata/profilecard/?igsh=MmR1NXI4dDQxdHY4" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="https://github.com/NataDeNata" class="social-link"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Settings Panel -->
+        <div class="settings-panel" id="settingsPanel">
+            <div class="settings-header">
+                <h3>Settings</h3>
+                <button class="close-btn" id="closeSettings">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="settings-content">
+                <div class="setting-group">
+                    <h4>Font Size</h4>
+                    <div class="font-size-controls">
+                        <button class="font-btn" id="decreaseFont">A-</button>
+                        <span id="fontSizeDisplay">100%</span>
+                        <button class="font-btn" id="increaseFont">A+</button>
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <h4>Theme</h4>
+                    <div class="theme-toggle">
+                        <span>Dark Mode</span>
+                        <label class="switch">
+                            <input type="checkbox" id="themeToggle">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="auth.js"></script>
+        <script src="font-settings.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Theme Management System
+                // Handles switching between light and dark themes
+                // Saves user preference to localStorage
+                const themeToggle = document.getElementById('themeToggle');
+                const html = document.documentElement;
+                
+                // Initialize theme from saved preference or default to dark
+                const savedTheme = localStorage.getItem('theme') || 'dark';
+                html.setAttribute('data-theme', savedTheme);
+                themeToggle.checked = savedTheme === 'light';
+                
+                // Theme toggle event listener
+                // Updates theme and saves preference when user toggles
+                themeToggle.addEventListener('change', function() {
+                    const newTheme = this.checked ? 'light' : 'dark';
+                    html.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                });
+                
+                // Settings Panel Management
+                // Controls the visibility of the settings panel
+                // Handles opening, closing, and outside clicks
+                const settingsBtn = document.getElementById('fontSettingsBtn');
+                const settingsPanel = document.getElementById('settingsPanel');
+                const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+                
+                // Toggle settings panel visibility
+                settingsBtn.addEventListener('click', function() {
+                    settingsPanel.classList.toggle('show');
+                });
+                
+                // Close settings panel
+                closeSettingsBtn.addEventListener('click', function() {
+                    settingsPanel.classList.remove('show');
+                });
+                
+                // Close settings when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!settingsPanel.contains(e.target) && !settingsBtn.contains(e.target)) {
+                        settingsPanel.classList.remove('show');
+                    }
+                });
+
+                // Font Size Management System
+                // Handles font size adjustments and persistence
+                const decreaseFont = document.getElementById('decreaseFont');
+                const increaseFont = document.getElementById('increaseFont');
+                const fontSizeDisplay = document.getElementById('fontSizeDisplay');
+
+                // Load saved font size from localStorage
+                const savedFontSize = localStorage.getItem('fontSize') || '100';
+                document.documentElement.style.fontSize = savedFontSize + '%';
+                fontSizeDisplay.textContent = savedFontSize + '%';
+
+                // Decrease font size handler
+                decreaseFont.addEventListener('click', () => {
+                    const currentSize = parseInt(fontSizeDisplay.textContent);
+                    if (currentSize > 80) {
+                        const newSize = currentSize - 10;
+                        document.documentElement.style.fontSize = newSize + '%';
+                        fontSizeDisplay.textContent = newSize + '%';
+                        localStorage.setItem('fontSize', newSize);
+                    }
+                });
+
+                // Increase font size handler
+                increaseFont.addEventListener('click', () => {
+                    const currentSize = parseInt(fontSizeDisplay.textContent);
+                    if (currentSize < 150) {
+                        const newSize = currentSize + 10;
+                        document.documentElement.style.fontSize = newSize + '%';
+                        fontSizeDisplay.textContent = newSize + '%';
+                        localStorage.setItem('fontSize', newSize);
+                    }
+                });
+
+                // Mobile Menu System
+                // Handles responsive navigation
+                const hamburgerMenu = document.getElementById('hamburgerMenu');
+                const mainNav = document.querySelector('.main-nav');
+
+                // Toggle mobile menu
+                hamburgerMenu.addEventListener('click', function() {
+                    mainNav.classList.toggle('show');
+                    const icon = this.querySelector('i');
+                    if (mainNav.classList.contains('show')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!hamburgerMenu.contains(e.target) && !mainNav.contains(e.target)) {
+                        mainNav.classList.remove('show');
+                        const icon = hamburgerMenu.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+
+                // Close mobile menu when window is resized to desktop view
+                window.addEventListener('resize', function() {
+                    if (window.innerWidth > 768) {
+                        mainNav.classList.remove('show');
+                        const icon = hamburgerMenu.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

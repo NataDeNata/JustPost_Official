@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Notes - Notes App</title>
+            <link rel="stylesheet" href="styles.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+            <style>
+                :root[data-theme="light"] {
+                    --bg-color: #ffffff;
+                    --text-color: #333333;
+                    --primary-color: #2d1a8b;
+                    --secondary-color: #363055;
+                    --card-bg: rgba(255, 255, 255, 0.95);
+                    --card-border: rgba(255, 255, 255, 0.3);
+                    --input-bg: rgba(255, 255, 255, 0.9);
+                    --hover-bg: rgba(45, 26, 139, 0.1);
+                    --shadow-color: rgba(0, 0, 0, 0.1);
+                }
+
+                :root[data-theme="dark"] {
+                    --bg-color: #1a1a1a;
+                    --text-color: #ffffff;
+                    --primary-color: #4a3a9b;
+                    --secondary-color: #5a4aab;
+                    --card-bg: rgba(30, 30, 30, 0.95);
+                    --card-border: rgba(255, 255, 255, 0.1);
+                    --input-bg: rgba(40, 40, 40, 0.9);
+                    --hover-bg: rgba(255, 255, 255, 0.1);
+                    --shadow-color: rgba(0, 0, 0, 0.3);
+                }
+
+                body {
+                    background-color: var(--bg-color);
+                    color: var(--text-color);
+                    min-height: 100vh;
+                    margin: 0;
+                    font-family: Arial, sans-serif;
+                    background-image: url('images/webBg.jpg');
+                    background-size: cover;
+                    background-position: center;
+                    background-attachment: fixed;
+                    transition: background-color 0.3s ease, color 0.3s ease;
+                }
+
+                header {
+                    background: rgba(45, 26, 139, 0.9);
+                    padding: 1rem 2rem;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                    position: sticky;
+                    top: 0;
+                    z-index: 100;
+                    backdrop-filter: blur(10px);
+                }
+
+                .nav-container {
+                    display: flex;
+                    align-items: center;
+                    gap: 2rem;
+                    position: relative;
+                    width: 100%;
+                }
+
+                .main-nav {
+                    display: flex;
+                    gap: 1.5rem;
+                    align-items: center;
+                    margin-left: 2rem;
+                }
+
+                .nav-link {
+                    color: white;
+                    text-decoration: none;
+                    padding: 0.5rem 1rem;
+                    border-radius: 8px;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    font-size: 1rem;
+                }
+
+                .nav-link:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                    transform: translateY(-2px);
+                }
+
+                .nav-link.active {
+                    background: rgba(255, 255, 255, 0.2);
+                    font-weight: 500;
+                }
+
+                .nav-link i {
+                    font-size: 1.1rem;
+                }
+
+                header h1 {
+                    color: white;
+                    margin: 0;
+                    font-size: 1.8rem;
+                }
+
+                /* Notes Container Styles */
+                .notes-container {
+                    max-width: 1400px;
+                    margin: 2rem auto;
+                    padding: 2rem;
+                    background: var(--card-bg);
+                    border-radius: 16px;
+                    box-shadow: 0 8px 32px var(--shadow-color);
+                    backdrop-filter: blur(10px);
+                    border: 1px solid var(--card-border);
+                }
+
+                .notes-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 2rem;
+                }
+
+                .notes-header h2 {
+                    color: var(--primary-color);
+                    font-size: 2rem;
+                    margin: 0;
+                }
+
+                .create-note-btn {
+                    background: var(--primary-color);
+                    color: white;
+                    border: none;
+                    padding: 0.8rem 1.5rem;
+                    border-radius: 8px;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+
+                .create-note-btn:hover {
+                    background: var(--secondary-color);
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(45, 26, 139, 0.2);
+                }
+
+                .notes-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                    gap: 2rem;
+                }
+
+                .note-card {
+                    background: var(--card-bg);
+                    padding: 1.5rem;
+                    border-radius: 12px;
+                    transition: all 0.3s ease;
+                    position: relative;
+                    box-shadow: 0 4px 12px var(--shadow-color);
+                    border: 1px solid var(--card-border);
+                }
+
+                .note-card:hover {
+                    transform: translateY(-5px);
+                    background: var(--hover-bg);
+                    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+                }
+
+                .note-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    margin-bottom: 1rem;
+                }
+
+                .note-title {
+                    color: var(--primary-color);
+                    font-size: 1.2rem;
+                    font-weight: 600;
+                    margin: 0;
+                }
+
+                .note-actions {
+                    display: flex;
+                    gap: 0.5rem;
+                }
+
+                .note-action-btn {
+                    background: none;
+                    border: none;
+                    color: var(--text-color);
+                    cursor: pointer;
+                    padding: 0.3rem;
+                    border-radius: 4px;
+                    transition: all 0.3s ease;
+                }
+
+                .note-action-btn:hover {
+                    color: var(--primary-color);
+                    background: var(--hover-bg);
+                }
+
+                .note-content {
+                    color: var(--text-color);
+                    margin: 0;
+                    line-height: 1.6;
+                }
+
+                .note-date {
+                    color: var(--text-color);
+                    font-size: 0.9rem;
+                    margin-top: 1rem;
+                    opacity: 0.7;
+                }
+
+                .note-form {
+                    background: var(--card-bg);
+                    padding: 2rem;
+                    border-radius: 12px;
+                    margin-bottom: 2rem;
+                    box-shadow: 0 4px 12px var(--shadow-color);
+                    border: 1px solid var(--card-border);
+                }
+
+                .form-group {
+                    margin-bottom: 1.5rem;
+                }
+
+                .form-group label {
+                    display: block;
+                    color: var(--primary-color);
+                    margin-bottom: 0.5rem;
+                    font-weight: 500;
+                }
+
+                .form-group input,
+                .form-group textarea {
+                    width: 100%;
+                    padding: 0.8rem;
+                    border: 2px solid var(--card-border);
+                    border-radius: 8px;
+                    font-size: 1rem;
+                    transition: all 0.3s ease;
+                    background: var(--input-bg);
+                    color: var(--text-color);
+                }
+
+                .form-group input:focus,
+                .form-group textarea:focus {
+                    outline: none;
+                    border-color: var(--primary-color);
+                    box-shadow: 0 0 0 4px rgba(45, 26, 139, 0.1);
+                    background: var(--input-bg);
+                }
+
+                .form-group textarea {
+                    min-height: 150px;
+                    resize: vertical;
+                }
+
+                .form-actions {
+                    display: flex;
+                    gap: 1rem;
+                    justify-content: flex-end;
+                }
+
+                .cancel-btn {
+                    background: var(--card-bg);
+                    color: var(--text-color);
+                    border: 1px solid var(--card-border);
+                    padding: 0.8rem 1.5rem;
+                    border-radius: 8px;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                .cancel-btn:hover {
+                    background: var(--hover-bg);
+                }
+
+                .save-btn {
+                    background: var(--primary-color);
+                    color: white;
+                    border: none;
+                    padding: 0.8rem 1.5rem;
+                    border-radius: 8px;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                .save-btn:hover {
+                    background: var(--secondary-color);
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(45, 26, 139, 0.2);
+                }
+
+                .no-notes {
+                    text-align: center;
+                    color: var(--text-color);
+                    padding: 3rem;
+                    font-style: italic;
+                    background: var(--card-bg);
+                    border-radius: 12px;
+                    backdrop-filter: blur(5px);
+                    border: 1px solid var(--card-border);
+                }
+
+                /* Settings Panel Styles */
+                .settings-btn {
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    padding: 0.5rem;
+                    border-radius: 8px;
+                    transition: all 0.3s ease;
+                    color: white;
+                }
+
+                .settings-btn:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                }
+
+                .settings-icon {
+                    width: 24px;
+                    height: 24px;
+                    filter: invert(1);
+                }
+
+                .settings-panel {
+                    position: fixed;
+                    top: 0;
+                    right: -300px;
+                    width: 300px;
+                    height: 100vh;
+                    background: var(--card-bg);
+                    backdrop-filter: blur(10px);
+                    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+                    transition: right 0.3s ease;
+                    z-index: 1000;
+                    border-left: 1px solid var(--card-border);
+                }
+
+                .settings-panel.show {
+                    right: 0;
+                }
+
+                .settings-header {
+                    padding: 1.5rem;
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+
+                .settings-header h3 {
+                    margin: 0;
+                    color: var(--primary-color);
+                    font-size: 1.2rem;
+                }
+
+                .close-btn {
+                    background: none;
+                    border: none;
+                    font-size: 1.5rem;
+                    color: var(--text-color);
+                    cursor: pointer;
+                    padding: 0.5rem;
+                    border-radius: 8px;
+                    transition: all 0.3s ease;
+                }
+
+                .close-btn:hover {
+                    background: rgba(0, 0, 0, 0.05);
+                    color: var(--primary-color);
+                }
+
+                .settings-content {
+                    padding: 1.5rem;
+                }
+
+                .setting-group {
+                    margin-bottom: 2rem;
+                }
+
+                .setting-group h4 {
+                    color: var(--primary-color);
+                    margin-bottom: 1rem;
+                    font-size: 1rem;
+                }
+
+                .font-size-controls {
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                }
+
+                .font-btn {
+                    background: var(--primary-color);
+                    color: white;
+                    border: none;
+                    padding: 0.5rem 1rem;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                .font-btn:hover {
+                    background: var(--secondary-color);
+                    transform: translateY(-2px);
+                }
+
+                #fontSizeDisplay {
+                    color: var(--text-color);
+                    min-width: 80px;
+                    text-align: center;
+                }
+
+                .theme-toggle {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+
+                .switch {
+                    position: relative;
+                    display: inline-block;
+                    width: 60px;
+                    height: 34px;
+                }
+
+                .switch input {
+                    opacity: 0;
+                    width: 0;
+                    height: 0;
+                }
+
+                .slider {
+                    position: absolute;
+                    cursor: pointer;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: #ccc;
+                    transition: .4s;
+                }
+
+                .slider:before {
+                    position: absolute;
+                    content: "";
+                    height: 26px;
+                    width: 26px;
+                    left: 4px;
+                    bottom: 4px;
+                    background-color: white;
+                    transition: .4s;
+                }
+
+                input:checked + .slider {
+                    background-color: var(--primary-color);
+                }
+
+                input:checked + .slider:before {
+                    transform: translateX(26px);
+                }
+
+                .slider.round {
+                    border-radius: 34px;
+                }
+
+                .slider.round:before {
+                    border-radius: 50%;
+                }
+
+                /* Font Settings Toggle Button */
+                .font-settings-toggle {
+                    position: absolute;
+                    right: 4rem;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    z-index: 101;
+                }
+
+                @media (max-width: 768px) {
+                    header {
+                        flex-direction: column;
+                        gap: 1rem;
+                        padding: 1rem;
+                    }
+
+                    .nav-container {
+                        flex-direction: column;
+                        gap: 1rem;
+                        width: 100%;
+                    }
+
+                    .main-nav {
+                        width: 100%;
+                        justify-content: center;
+                        flex-wrap: wrap;
+                        margin-left: 0;
+                    }
+
+                    .nav-link {
+                        padding: 0.4rem 0.8rem;
+                        font-size: 0.9rem;
+                    }
+
+                    .notes-header {
+                        flex-direction: column;
+                        gap: 1rem;
+                        text-align: center;
+                    }
+
+                    .notes-grid {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .form-actions {
+                        flex-direction: column;
+                    }
+
+                    .form-actions button {
+                        width: 100%;
+                    }
+
+                    .notes-container {
+                        margin: 1rem;
+                        padding: 1rem;
+                    }
+
+                    .font-settings-toggle {
+                        right: 3.5rem;
+                    }
+
+                    .settings-btn {
+                        padding: 0.4rem;
+                    }
+
+                    .settings-icon {
+                        width: 20px;
+                        height: 20px;
+                    }
+
+                    .logout-btn {
+                        right: 1rem;
+                    }
+                }
+
+                /* Add these new styles */
+                .image-preview {
+                    max-width: 100%;
+                    margin-top: 1rem;
+                    border-radius: 8px;
+                    display: none;
+                }
+
+                .image-preview img {
+                    max-width: 100%;
+                    max-height: 200px;
+                    border-radius: 8px;
+                    object-fit: cover;
+                }
+
+                .attach-image-btn {
+                    background: var(--primary-color);
+                    color: white;
+                    border: none;
+                    padding: 0.5rem 1rem;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    font-size: 0.9rem;
+                    margin-top: 1rem;
+                }
+
+                .attach-image-btn:hover {
+                    background: var(--secondary-color);
+                }
+
+                .note-image {
+                    max-width: 100%;
+                    max-height: 200px;
+                    border-radius: 8px;
+                    margin-top: 1rem;
+                    object-fit: cover;
+                }
+
+                .remove-image-btn {
+                    background: #dc3545;
+                    color: white;
+                    border: none;
+                    padding: 0.3rem 0.6rem;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 0.8rem;
+                    margin-top: 0.5rem;
+                }
+
+                .remove-image-btn:hover {
+                    background: #c82333;
+                }
+
+                .image-container {
+                    position: relative;
+                    margin-top: 1rem;
+                }
+
+                /* Image Modal Styles */
+                .image-modal {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.9);
+                    z-index: 1000;
+                    cursor: zoom-out;
+                }
+
+                .modal-content {
+                    position: relative;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .modal-image {
+                    max-width: 90%;
+                    max-height: 90vh;
+                    object-fit: contain;
+                    border-radius: 8px;
+                    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+                    transition: transform 0.3s ease;
+                }
+
+                .modal-close {
+                    position: absolute;
+                    top: 20px;
+                    right: 20px;
+                    color: white;
+                    font-size: 2rem;
+                    cursor: pointer;
+                    background: none;
+                    border: none;
+                    padding: 10px;
+                    z-index: 1001;
+                }
+
+                .modal-close:hover {
+                    color: #ff4444;
+                }
+
+                .note-image {
+                    cursor: zoom-in;
+                    transition: transform 0.2s ease;
+                }
+
+                .note-image:hover {
+                    transform: scale(1.02);
+                }
+
+                /* Zoom controls */
+                .zoom-controls {
+                    position: absolute;
+                    bottom: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    display: flex;
+                    gap: 1rem;
+                    background: rgba(0, 0, 0, 0.5);
+                    padding: 0.5rem 1rem;
+                    border-radius: 8px;
+                    z-index: 1001;
+                }
+
+                .zoom-btn {
+                    background: white;
+                    border: none;
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.2rem;
+                    color: #333;
+                    transition: all 0.2s ease;
+                }
+
+                .zoom-btn:hover {
+                    background: #f0f0f0;
+                    transform: scale(1.1);
+                }
+
+                /* Footer Styles */
+                footer {
+                    background: var(--card-bg);
+                    padding: 2rem;
+                    border-top: 1px solid var(--card-border);
+                    backdrop-filter: blur(10px);
+                    position: fixed;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    z-index: 99;
+                }
+
+                .footer-content {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    gap: 2rem;
+                }
+
+                .footer-left {
+                    color: var(--text-color);
+                }
+
+                .footer-right {
+                    display: flex;
+                    gap: 1.5rem;
+                }
+
+                .social-link {
+                    color: var(--text-color);
+                    font-size: 1.5rem;
+                    transition: all 0.3s ease;
+                }
+
+                .social-link:hover {
+                    color: var(--primary-color);
+                    transform: translateY(-2px);
+                }
+
+                @media (max-width: 768px) {
+                    .footer-content {
+                        flex-direction: column;
+                        text-align: center;
+                    }
+
+                    .footer-right {
+                        justify-content: center;
+                    }
+                }
+
+                /* Update mobile menu styles */
+                .hamburger-menu {
+                    display: none;
+                    background: none;
+                    border: none;
+                    color: white;
+                    font-size: 1.5rem;
+                    cursor: pointer;
+                    padding: 0.5rem;
+                    transition: all 0.3s ease;
+                    position: absolute;
+                    left: 1rem;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    z-index: 101;
+                }
+
+                .hamburger-menu:hover {
+                    color: rgba(255, 255, 255, 0.8);
+                }
+
+                @media (max-width: 768px) {
+                    .hamburger-menu {
+                        display: block;
+                    }
+
+                    .nav-container {
+                        position: relative;
+                        width: 100%;
+                        justify-content: center;
+                    }
+
+                    .main-nav {
+                        display: none;
+                        position: absolute;
+                        top: 100%;
+                        left: 0;
+                        right: 0;
+                        background: rgba(45, 26, 139, 0.95);
+                        padding: 1rem;
+                        flex-direction: column;
+                        align-items: stretch;
+                        gap: 0.5rem;
+                        border-radius: 0 0 8px 8px;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                        backdrop-filter: blur(10px);
+                    }
+
+                    .main-nav.show {
+                        display: flex;
+                    }
+
+                    .nav-link {
+                        width: 100%;
+                        justify-content: center;
+                        padding: 0.8rem;
+                    }
+
+                    .logout-btn {
+                        width: auto;
+                        padding: 0.5rem;
+                        font-size: 0.9rem;
+                        position: absolute;
+                        right: 1rem;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        background: none;
+                        border: none;
+                    }
+
+                    .logout-btn i {
+                        font-size: 1.2rem;
+                    }
+
+                    .logout-btn span {
+                        display: none;
+                    }
+
+                    header {
+                        padding: 1rem;
+                    }
+
+                    header h1 {
+                        margin-left: 3rem;
+                        font-size: 1.5rem;
+                    }
+                }
+
+                /* Update header styles */
+                .header-actions {
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                    position: absolute;
+                    right: 1rem;
+                    top: 50%;
+                    transform: translateY(-50%);
+                }
+
+                .font-settings-toggle {
+                    margin-right: 0.5rem;
+                }
+
+                @media (max-width: 768px) {
+                    .header-actions {
+                        position: absolute;
+                        right: 1rem;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                    }
+
+                    .font-settings-toggle {
+                        margin-right: 0;
+                    }
+
+                    .settings-btn {
+                        padding: 0.4rem;
+                    }
+
+                    .settings-icon {
+                        width: 20px;
+                        height: 20px;
+                    }
+
+                    .logout-btn {
+                        padding: 0.4rem;
+                        font-size: 0.0001px;
+                        background: none;
+                        border: none;
+                        margin-right: 20px;
+                    }
+
+                    .logout-btn i {
+                        font-size: 1.2rem;
+                    }
+
+                    .logout-btn span {
+                        display: none;
+                    }
+
+                    header h1 {
+                        margin-left: 3rem;
+                        font-size: 1.5rem;
+                    }
+                }
+
+                /* Add margin to main content to prevent overlap with fixed footer */
+                main {
+                    margin-bottom: calc(6rem + 80px); /* footer height + extra space */
+                }
+
+                .logout-btn {
+                    color: white;
+                    text-decoration: none;
+                    padding: 0.5rem;
+                    border-radius: 8px;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    font-size: 0.0001px;
+                    background: none;
+                    border: none;
+                    margin-right: 20px;
+                }
+
+                .logout-btn i {
+                    font-size: 1.2rem;
+                }
+
+                .logout-btn span {
+                    display: none;
+                }
+            </style>
+        </head>
+        <body>
+            <header>
+                <div class="nav-container">
+                    <button class="hamburger-menu" id="hamburgerMenu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1>JustPost</h1>
+                    <nav class="main-nav">
+                        <a href="index.html" class="nav-link">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                        <a href="notes.html" class="nav-link active">
+                            <i class="fas fa-sticky-note"></i> Notes
+                        </a>
+                        <a href="about.html" class="nav-link">
+                            <i class="fas fa-info-circle"></i> About
+                        </a>
+                        <a href="contact.html" class="nav-link">
+                            <i class="fas fa-envelope"></i> Contact
+                        </a>
+                    </nav>
+                    <div class="header-actions">
+                        <div class="font-settings-toggle">
+                            <button id="fontSettingsBtn" class="settings-btn">
+                                <i class="fas fa-cog settings-icon"></i>
+                            </button>
+                        </div>
+                        <a href="login.html" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Settings Panel -->
+            <div id="settingsPanel" class="settings-panel">
+                <div class="settings-header">
+                    <h3>Settings</h3>
+                    <button id="closeSettingsBtn" class="close-btn">&times;</button>
+                </div>
+                <div class="settings-content">
+                    <div class="setting-group">
+                        <h4>Font Size</h4>
+                        <div class="font-size-controls">
+                            <button id="decreaseFontBtn" class="font-btn">A-</button>
+                            <span id="fontSizeDisplay">Medium</span>
+                            <button id="increaseFontBtn" class="font-btn">A+</button>
+                        </div>
+                    </div>
+                    <div class="setting-group">
+                        <h4>Theme</h4>
+                        <div class="theme-toggle">
+                            <span>Dark/Light Mode</span>
+                            <label class="switch">
+                                <input type="checkbox" id="themeToggle">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <main>
+                <div class="notes-container">
+                    <div class="notes-header">
+                        <h2>Your Notes</h2>
+                        <button class="create-note-btn" id="createNoteBtn">
+                            <i class="fas fa-plus"></i> Create New Note
+                        </button>
+                    </div>
+
+                    <!-- Note Creation Form (Hidden by default) -->
+                    <div class="note-form" id="noteForm" style="display: none;">
+                        <div class="form-group">
+                            <label for="noteTitle">Title</label>
+                            <input type="text" id="noteTitle" placeholder="Enter note title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="noteContent">Content</label>
+                            <textarea id="noteContent" placeholder="Write your note here..." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                            <button type="button" class="attach-image-btn" id="attachImageBtn">
+                                <i class="fas fa-image"></i> Attach Image
+                            </button>
+                            <div class="image-preview" id="imagePreview">
+                                <img id="previewImg" src="" alt="Preview">
+                                <button type="button" class="remove-image-btn" id="removeImageBtn">
+                                    <i class="fas fa-times"></i> Remove Image
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="cancel-btn" id="cancelNoteBtn">Cancel</button>
+                            <button class="save-btn" id="saveNoteBtn">Save Note</button>
+                        </div>
+                    </div>
+
+                    <!-- Notes Grid -->
+                    <div class="notes-grid" id="notesGrid">
+                        <!-- Notes will be loaded here dynamically -->
+                    </div>
+                </div>
+            </main>
+
+            <div class="image-modal" id="imageModal">
+                <div class="modal-content">
+                    <button class="modal-close" id="modalClose">&times;</button>
+                    <img class="modal-image" id="modalImage" src="" alt="Zoomed image">
+                    <div class="zoom-controls">
+                        <button class="zoom-btn" id="zoomOut">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button class="zoom-btn" id="zoomIn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <footer>
+                <div class="footer-content">
+                    <div class="footer-left">
+                        <p>&copy; 2024 JustPost. All rights reserved.</p>
+                    </div>
+                    <div class="footer-right">
+                        <a href="https://www.facebook.com/natsnattyu?rdid=Tb1atsjZg1z5q7Ba&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F16cFE3DiML%2F" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/natsdenata/profilecard/?igsh=MmR1NXI4dDQxdHY4" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="https://github.com/NataDeNata" class="social-link"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </footer>
+
+            <script src="auth.js"></script>
+            <script src="font-settings.js"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Theme Management System
+                    // Handles switching between light and dark themes
+                    // Saves user preference to localStorage
+                    const themeToggle = document.getElementById('themeToggle');
+                    const html = document.documentElement;
+                    
+                    // Initialize theme from saved preference or default to dark
+                    const savedTheme = localStorage.getItem('theme') || 'dark';
+                    html.setAttribute('data-theme', savedTheme);
+                    themeToggle.checked = savedTheme === 'light';
+                    
+                    // Theme toggle event listener
+                    // Updates theme and saves preference when user toggles
+                    themeToggle.addEventListener('change', function() {
+                        const newTheme = this.checked ? 'light' : 'dark';
+                        html.setAttribute('data-theme', newTheme);
+                        localStorage.setItem('theme', newTheme);
+                    });
+                    
+                    // Settings Panel Management
+                    // Controls the visibility of the settings panel
+                    // Handles opening, closing, and outside clicks
+                    const settingsBtn = document.getElementById('fontSettingsBtn');
+                    const settingsPanel = document.getElementById('settingsPanel');
+                    const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+                    
+                    // Toggle settings panel visibility
+                    settingsBtn.addEventListener('click', function() {
+                        settingsPanel.classList.toggle('show');
+                    });
+                    
+                    // Close settings panel
+                    closeSettingsBtn.addEventListener('click', function() {
+                        settingsPanel.classList.remove('show');
+                    });
+                    
+                    // Close settings when clicking outside
+                    document.addEventListener('click', function(e) {
+                        if (!settingsPanel.contains(e.target) && !settingsBtn.contains(e.target)) {
+                            settingsPanel.classList.remove('show');
+                        }
+                    });
+
+                    // Note Management System
+                    // Handles creation, editing, and deletion of notes
+                    const createNoteBtn = document.getElementById('createNoteBtn');
+                    const noteForm = document.getElementById('noteForm');
+                    const cancelNoteBtn = document.getElementById('cancelNoteBtn');
+                    const saveNoteBtn = document.getElementById('saveNoteBtn');
+                    const notesGrid = document.getElementById('notesGrid');
+
+                    // Show note creation form
+                    createNoteBtn.addEventListener('click', function() {
+                        noteForm.style.display = 'block';
+                        document.getElementById('noteTitle').focus();
+                    });
+
+                    // Hide note form and reset fields
+                    cancelNoteBtn.addEventListener('click', function() {
+                        noteForm.style.display = 'none';
+                        document.getElementById('noteTitle').value = '';
+                        document.getElementById('noteContent').value = '';
+                    });
+
+                    // Image Upload System
+                    // Handles image selection, preview, and removal
+                    const attachImageBtn = document.getElementById('attachImageBtn');
+                    const imageUpload = document.getElementById('imageUpload');
+                    const imagePreview = document.getElementById('imagePreview');
+                    const previewImg = document.getElementById('previewImg');
+                    const removeImageBtn = document.getElementById('removeImageBtn');
+                    let currentImage = null;
+
+                    // Trigger file input when attach button is clicked
+                    attachImageBtn.addEventListener('click', () => {
+                        imageUpload.click();
+                    });
+
+                    // Handle image selection and preview
+                    imageUpload.addEventListener('change', (e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                previewImg.src = e.target.result;
+                                imagePreview.style.display = 'block';
+                                currentImage = e.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+
+                    // Remove selected image
+                    removeImageBtn.addEventListener('click', () => {
+                        imagePreview.style.display = 'none';
+                        previewImg.src = '';
+                        imageUpload.value = '';
+                        currentImage = null;
+                    });
+
+                    // Save Note Function
+                    // Creates new note and saves to localStorage
+                    saveNoteBtn.addEventListener('click', function() {
+                        const title = document.getElementById('noteTitle').value.trim();
+                        const content = document.getElementById('noteContent').value.trim();
+
+                        if (title && content) {
+                            const note = {
+                                id: Date.now(),
+                                title: title,
+                                content: content,
+                                image: currentImage,
+                                date: new Date().toLocaleDateString()
+                            };
+
+                            // Save to localStorage
+                            const notes = JSON.parse(localStorage.getItem('notes') || '[]');
+                            notes.push(note);
+                            localStorage.setItem('notes', JSON.stringify(notes));
+
+                            // Add note to grid
+                            addNoteToGrid(note);
+
+                            // Reset form
+                            document.getElementById('noteTitle').value = '';
+                            document.getElementById('noteContent').value = '';
+                            imagePreview.style.display = 'none';
+                            previewImg.src = '';
+                            imageUpload.value = '';
+                            currentImage = null;
+                            noteForm.style.display = 'none';
+                        }
+                    });
+
+                    // Add Note to Grid Function
+                    // Creates HTML elements for note display
+                    function addNoteToGrid(note) {
+                        const noteCard = document.createElement('div');
+                        noteCard.className = 'note-card';
+                        noteCard.innerHTML = `
+                            <div class="note-header">
+                                <h3 class="note-title">${note.title}</h3>
+                                <div class="note-actions">
+                                    <button class="edit-btn" title="Edit Note">
+                                        <img src="images/pencil.png" alt="Edit" class="action-icon">
+                                    </button>
+                                    <button class="delete-btn" title="Delete Note">
+                                        <img src="images/trash.png" alt="Delete" class="action-icon">
+                                    </button>
+                                    <button class="save-btn" title="Save Note">
+                                        <img src="images/save.png" alt="Save" class="action-icon">
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="note-content">${note.content}</p>
+                            ${note.image ? `
+                                <div class="image-container">
+                                    <img src="${note.image}" alt="Note image" class="note-image" onclick="openImageModal('${note.image}')">
+                                </div>
+                            ` : ''}
+                            <div class="note-date">${note.date}</div>
+                        `;
+
+                        notesGrid.appendChild(noteCard);
+
+                        // Add event listeners for edit and delete
+                        noteCard.querySelector('.edit-btn').addEventListener('click', function() {
+                            editNote(note.id);
+                        });
+
+                        noteCard.querySelector('.delete-btn').addEventListener('click', function() {
+                            deleteNote(note.id);
+                        });
+                    }
+
+                    // Edit Note Function
+                    // Loads note data into form for editing
+                    function editNote(id) {
+                        const notes = JSON.parse(localStorage.getItem('notes') || '[]');
+                        const note = notes.find(n => n.id === id);
+                        if (note) {
+                            document.getElementById('noteTitle').value = note.title;
+                            document.getElementById('noteContent').value = note.content;
+                            if (note.image) {
+                                previewImg.src = note.image;
+                                imagePreview.style.display = 'block';
+                                currentImage = note.image;
+                            }
+                            noteForm.style.display = 'block';
+                            // Remove the old note
+                            deleteNote(id);
+                        }
+                    }
+
+                    // Delete Note Function
+                    // Removes note from localStorage and UI
+                    function deleteNote(id) {
+                        const notes = JSON.parse(localStorage.getItem('notes') || '[]');
+                        const updatedNotes = notes.filter(note => note.id !== id);
+                        localStorage.setItem('notes', JSON.stringify(updatedNotes));
+                        loadNotes();
+                    }
+
+                    // Load Notes Function
+                    // Loads all notes from localStorage and displays them
+                    function loadNotes() {
+                        notesGrid.innerHTML = '';
+                        const notes = JSON.parse(localStorage.getItem('notes') || '[]');
+                        if (notes.length === 0) {
+                            notesGrid.innerHTML = '<div class="no-notes">No notes yet. Create your first note!</div>';
+                        } else {
+                            notes.forEach(note => addNoteToGrid(note));
+                        }
+                    }
+
+                    // Image Modal System
+                    // Handles image zooming and modal display
+                    const imageModal = document.getElementById('imageModal');
+                    const modalImage = document.getElementById('modalImage');
+                    const modalClose = document.getElementById('modalClose');
+                    const zoomIn = document.getElementById('zoomIn');
+                    const zoomOut = document.getElementById('zoomOut');
+                    let currentZoom = 1;
+
+                    // Open image modal with zoom functionality
+                    function openImageModal(imageSrc) {
+                        modalImage.src = imageSrc;
+                        imageModal.style.display = 'block';
+                        currentZoom = 1;
+                        modalImage.style.transform = `scale(${currentZoom})`;
+                        document.body.style.overflow = 'hidden';
+                    }
+
+                    // Close image modal
+                    function closeImageModal() {
+                        imageModal.style.display = 'none';
+                        document.body.style.overflow = '';
+                    }
+
+                    // Mobile Menu System
+                    // Handles responsive navigation
+                    const hamburgerMenu = document.getElementById('hamburgerMenu');
+                    const mainNav = document.querySelector('.main-nav');
+
+                    // Toggle mobile menu
+                    hamburgerMenu.addEventListener('click', function() {
+                        mainNav.classList.toggle('show');
+                        const icon = this.querySelector('i');
+                        if (mainNav.classList.contains('show')) {
+                            icon.classList.remove('fa-bars');
+                            icon.classList.add('fa-times');
+                        } else {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    });
+
+                    // Initial load of notes
+                    loadNotes();
+                });
+            </script>
+        </body>
+</html>

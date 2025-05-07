@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Notes App</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root[data-theme="light"] {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --primary-color: #2d1a8b;
+            --secondary-color: #363055;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(255, 255, 255, 0.3);
+            --input-bg: rgba(255, 255, 255, 0.9);
+            --hover-bg: rgba(45, 26, 139, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        :root[data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+            --primary-color: #4a3a9b;
+            --secondary-color: #5a4aab;
+            --card-bg: rgba(30, 30, 30, 0.95);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --input-bg: rgba(40, 40, 40, 0.9);
+            --hover-bg: rgba(255, 255, 255, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+            background-image: url('images/webBg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            padding-bottom: 100px;
+        }
+        
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .auth-box {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px var(--shadow-color);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .auth-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px var(--shadow-color);
+        }
+        
+        .auth-box h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px var(--shadow-color);
+        }
+        
+        .auth-form .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .auth-form label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--primary-color);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .auth-form input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px var(--shadow-color);
+        }
+        
+        .auth-form input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(45, 26, 139, 0.1);
+            background: var(--input-bg);
+        }
+        
+        .auth-form input::placeholder {
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+        
+        .auth-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+        
+        .auth-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow-color);
+        }
+        
+        .auth-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+        
+        .auth-switch {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+        
+        .auth-switch a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-switch a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        /* Error message styling */
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .form-group.error input {
+            border-color: #dc3545;
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        /* Loading state */
+        .auth-btn.loading {
+            background: var(--secondary-color);
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .auth-box {
+                padding: 2rem;
+            }
+            
+            .auth-box h2 {
+                font-size: 1.75rem;
+            }
+            
+            .auth-form input {
+                padding: 0.875rem;
+            }
+            
+            .auth-btn {
+                padding: 0.875rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* Footer Styles */
+        footer {
+            background: var(--card-bg);
+            padding: 2rem;
+            margin-top: 3rem;
+            border-top: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-left {
+            color: var(--text-color);
+        }
+
+        .footer-right {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .social-link {
+            color: var(--text-color);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-right {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-box">
+            <h2>Welcome Back</h2>
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    <div class="error-message">Please enter a valid email address</div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <div class="error-message">Please enter your password</div>
+                </div>
+                <button type="submit" class="auth-btn">Login</button>
+            </form>
+            <p class="auth-switch">Don't have an account? <a href="register.html">Register</a></p>
+        </div>
+    </div>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-left">
+                <p>&copy; 2024 JustPost. All rights reserved.</p>
+            </div>
+            <div class="footer-right">
+                <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const submitBtn = document.querySelector('.auth-btn');
+
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Reset previous errors
+                document.querySelectorAll('.form-group').forEach(group => {
+                    group.classList.remove('error');
+                });
+
+                let isValid = true;
+
+                // Validate email
+                if (!emailInput.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                    emailInput.parentElement.classList.add('error');
+                    isValid = false;
+                }
+
+                // Validate password
+                if (passwordInput.value.length < 6) {
+                    passwordInput.parentElement.classList.add('error');
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    // Get stored user data
+                    const userData = JSON.parse(localStorage.getItem('userData'));
+                    
+                    if (!userData) {
+                        // No user data found
+                        emailInput.parentElement.classList.add('error');
+                        emailInput.parentElement.querySelector('.error-message').textContent = 'No account found. Please register first.';
+                        isValid = false;
+                    } else if (userData.email !== emailInput.value || userData.password !== passwordInput.value) {
+                        // Invalid credentials
+                        emailInput.parentElement.classList.add('error');
+                        emailInput.parentElement.querySelector('.error-message').textContent = 'Invalid email or password';
+                        isValid = false;
+                    }
+
+                    if (isValid) {
+                        submitBtn.classList.add('loading');
+                        submitBtn.textContent = 'Logging in...';
+                        submitBtn.disabled = true;
+
+                        // Store login state and redirect
+                        localStorage.setItem('isLoggedIn', 'true');
+                        localStorage.setItem('currentUser', JSON.stringify({
+                            fullname: userData.fullname,
+                            email: userData.email
+                        }));
+                        
+                        // Redirect to home page
+                        window.location.href = 'index.html';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
